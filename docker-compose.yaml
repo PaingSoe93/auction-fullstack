@@ -24,3 +24,15 @@ services:
     environment:
       - NODE_ENV=development
       - JWT_SECRET=My!ecret007
+
+  frontend:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
