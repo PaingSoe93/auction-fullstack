@@ -55,7 +55,9 @@ Both front-end and back-end services are orchestrated using Docker Compose for e
 1. ** Frontend: **
 
    - Modularized components following best practices for React development.
-   - State management is handled efficiently using hooks and context
+   - Components are designed to be reusable, ensuring a consistent UI and reduced redundancy.
+   - Robust error handling mechanisms are in place to gracefully handle unexpected issues and provide meaningful feedback to users.
+   - Components are designed to be responsive, ensuring a seamless experience across devices of varying screen sizes.
 
 2. ** Backend: **
 
@@ -118,6 +120,24 @@ http://localhost:8000/docs
 ```
 docker compose down
 ```
+
+### Testing
+
+** API: **
+
+Navigate to the api directory:
+
+```
+cd api
+```
+
+Then, run:
+
+```
+yarn test
+```
+
+This will execute the NestJS testing suite.
 
 ### Troubleshooting
 

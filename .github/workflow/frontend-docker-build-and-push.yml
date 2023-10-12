@@ -27,4 +27,4 @@ jobs:
           context: ./frontend
           file: ./frontend/Dockerfile
           push: true
-          tags: your_dockerhub_username/frontend:latest
+          tags: devpaing/frontend:latest

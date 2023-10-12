@@ -11,6 +11,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Run tests
+        working-directory: ./api  # Assuming your tests need to run in the 'api' directory
+        run: |
+          yarn install
+          yarn test
       
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -27,4 +33,4 @@ jobs:
           context: ./api
           file: ./api/Dockerfile
           push: true
-          tags: your_dockerhub_username/api:latest
+          tags: devpaing/server:latest
