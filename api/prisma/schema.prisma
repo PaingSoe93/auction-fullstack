@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  username     String
+  password     String
+  balance      Float         @default(0)
+  items        Item[]
+  bids         Bid[]
+  transactions Transaction[]
+
+  @@map("users")
+}
+
+model Item {
+  id            Int        @id @default(autoincrement())
+  name          String
+  startingPrice Float
+  startTime     DateTime
+  endTime       DateTime
+  duration      String
+  status        ItemStatus @default(ONGOING)
+
+  userId Int
+  user   User  @relation(fields: [userId], references: [id])
+  bids   Bid[]
+
+  @@map("items")
+}
+
+enum ItemStatus {
+  COMPLETED
+  ONGOING
+}
+
+model Bid {
+  id        Int       @id @default(autoincrement())
+  bidAmount Float
+  bidTime   DateTime
+  status    BidStatus
+
+  itemId Int
+  item   Item @relation(fields: [itemId], references: [id])
+
+  userId       Int
+  user         User          @relation(fields: [userId], references: [id])
+  transactions Transaction[]
+
+  @@map("bids")
+}
+
+enum BidStatus {
+  ACTIVE
+  FAILED
+  SUCCESS
+}
+
+model Transaction {
+  id        Int             @id @default(autoincrement())
+  type      TransactionType
+  amount    Float
+  timestamp DateTime
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  bid   Bid? @relation(fields: [bidId], references: [id])
+  bidId Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("transactions")
+}
+
+enum TransactionType {
+  DEPOSIT
+  HOLD
+  REFUND
+  PAYOUT
+}
