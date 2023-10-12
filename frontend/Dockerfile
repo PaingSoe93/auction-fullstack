@@ -8,13 +8,13 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN yarn install
 
 # Copy the local files to the container
 COPY . .
 
 # Build the React app
-RUN npm run build
+RUN yarn build
 
 # Step 2: Serve the React application
 FROM nginx:1.19.0-alpine
