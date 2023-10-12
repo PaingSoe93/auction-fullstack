@@ -1,7 +1,9 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppHook } from "../context/appContext";
+import DialogBox from "./dialogBox";
+import Button from "./button";
 
 const profile = {
   name: "Tom Cook",
@@ -23,101 +25,138 @@ export default function Navbar() {
 
   const { setUser, user } = useAppHook();
 
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   return (
-    <Disclosure as="nav" className=" shadow-md">
-      {({ open }) => (
-        <>
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex h-16 justify-between">
-              <div className="flex">
-                <div className="flex flex-shrink-0 items-center">
-                  {/* <img
+    <>
+      <Disclosure as="nav" className=" shadow-md">
+        {({ open }) => (
+          <>
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <div className="flex h-16 justify-between">
+                <div className="flex">
+                  <div className="flex flex-shrink-0 items-center">
+                    {/* <img
                     className="h-8 w-auto"
                     src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
                     alt="Your Company"
                   /> */}
-                  <h1 className="text-3xl font-semibold font-serif text-center  text-[#FF5674] cursor-pointer">
-                    Logo
-                  </h1>
+                    <h1 className="text-3xl font-semibold font-serif text-center  text-[#FF5674] cursor-pointer">
+                      Logo
+                    </h1>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <p className="text-[#202030] text-lg font-semibold opacity-70">
-                    Balance : {user?.balance} $
-                  </p>
-                </div>
-                <div className="ml-4 flex flex-shrink-0 items-center">
-                  {/* Profile dropdown */}
-                  <Menu as="div" className="relative ml-3">
-                    <div>
-                      <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                        <span className="absolute -inset-1.5" />
-                        <span className="sr-only">Open user menu</span>
-                        <img
-                          className="h-8 w-8 rounded-full"
-                          src={profile.imageUrl}
-                          alt=""
-                        />
-                      </Menu.Button>
-                    </div>
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-200"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {userNavigation.map((item) => (
-                          <Menu.Item key={item.name}>
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <p className="text-[#202030] text-lg font-semibold opacity-70">
+                      Balance : {user?.balance} $
+                    </p>
+                  </div>
+                  <div className="ml-4 flex flex-shrink-0 items-center">
+                    {/* Profile dropdown */}
+                    <Menu as="div" className="relative ml-3">
+                      <div>
+                        <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                          <span className="absolute -inset-1.5" />
+                          <span className="sr-only">Open user menu</span>
+                          <img
+                            className="h-8 w-8 rounded-full"
+                            src={profile.imageUrl}
+                            alt=""
+                          />
+                        </Menu.Button>
+                      </div>
+                      <Transition
+                        as={Fragment}
+                        enter="transition ease-out duration-200"
+                        enterFrom="transform opacity-0 scale-95"
+                        enterTo="transform opacity-100 scale-100"
+                        leave="transition ease-in duration-75"
+                        leaveFrom="transform opacity-100 scale-100"
+                        leaveTo="transform opacity-0 scale-95"
+                      >
+                        <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                          {userNavigation.map((item) => (
+                            <Menu.Item key={item.name}>
+                              {({ active }) => (
+                                <Link to={item.href}>
+                                  <p
+                                    className={classNames(
+                                      active ? "bg-gray-100" : "",
+                                      "block px-4 py-2 text-sm text-gray-700"
+                                    )}
+                                  >
+                                    {item.name}
+                                  </p>
+                                </Link>
+                              )}
+                            </Menu.Item>
+                          ))}
+                          <Menu.Item>
                             {({ active }) => (
-                              <Link to={item.href}>
-                                <p
-                                  className={classNames(
-                                    active ? "bg-gray-100" : "",
-                                    "block px-4 py-2 text-sm text-gray-700"
-                                  )}
-                                >
-                                  {item.name}
-                                </p>
-                              </Link>
+                              <p
+                                onClick={() => {
+                                  setDialogOpen(true);
+                                }}
+                                className={classNames(
+                                  active ? "bg-gray-100" : "",
+                                  "block px-4 py-2 text-sm text-gray-700 cursor-pointer"
+                                )}
+                              >
+                                Logout
+                              </p>
                             )}
                           </Menu.Item>
-                        ))}
-                        <Menu.Item>
-                          {({ active }) => (
-                            <p
-                              onClick={() => {
-                                localStorage.removeItem("accessToken");
-                                setUser({
-                                  username: "",
-                                  balance: null,
-                                  id: null,
-                                  email: "",
-                                });
-                                navigate("/signIn");
-                              }}
-                              className={classNames(
-                                active ? "bg-gray-100" : "",
-                                "block px-4 py-2 text-sm text-gray-700 cursor-pointer"
-                              )}
-                            >
-                              Logout
-                            </p>
-                          )}
-                        </Menu.Item>
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
+                        </Menu.Items>
+                      </Transition>
+                    </Menu>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </>
-      )}
-    </Disclosure>
+          </>
+        )}
+      </Disclosure>
+
+      <DialogBox
+        open={dialogOpen}
+        onClose={setDialogOpen}
+        size="md"
+        titlePlace={true}
+        title="Logout"
+      >
+        <h3 className="text-[#202030] text-lg text-center font-bold opacity-60 px-4">
+          Are you sure want to logout?
+        </h3>
+        <div className="flex px-5 gap-4 pt-5">
+          <Button
+            btnStyle={true}
+            dissabled={false}
+            callBack={() => {
+              setDialogOpen(false);
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            btnStyle={false}
+            dissabled={false}
+            callBack={() => {
+              setDialogOpen(false);
+              localStorage.removeItem("accessToken");
+              setUser({
+                username: "",
+                balance: null,
+                id: null,
+                email: "",
+              });
+              navigate("/signIn");
+            }}
+          >
+            Log out
+          </Button>
+        </div>
+      </DialogBox>
+    </>
   );
 }

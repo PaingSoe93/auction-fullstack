@@ -298,7 +298,7 @@ const CreateItem = () => {
               dissabled={validateTesting() || check ? true : false}
               callBack={handleSubmit}
             >
-              {check ? "Loading" : "Create"}
+              {check ? "Loading" : "PUBLISH"}
             </Button>
           </div>
         </OnBoardingLayout>
