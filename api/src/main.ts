@@ -6,7 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
   const config = new DocumentBuilder()
-    .setTitle('AUCTION API')
+    .setTitle('AUCTION-API')
     .setDescription('The Auction API documentation')
     .setVersion('1.0')
     .addBearerAuth()
